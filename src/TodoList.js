@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 const NoteApp = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState({ title: '', content: '' });
+  const [editMode, setEditMode] = useState(false)
+  const [editNoteId, setEditNoteId] = useState(null)
 
   const handleAddNote = (e) => {
     e.preventDefault();
@@ -18,6 +20,25 @@ const NoteApp = () => {
     setNotes([...notes, newNoteObj]);
     setNewNote({ title: '', content: '' });
   };
+
+  const handleEditNote = (note) => {
+    setEditMode(true);
+    setEditNoteId(note.id);
+    setNewNote({
+      title: note.title,
+      content: note.content,
+    });
+  };
+
+  const handleEditNoteCancel = () => {
+    setEditMode(false);
+    setEditNoteId(null);
+    setNewNote({title:'', content:''})
+  }
+
+  const handleDeleteNote = (noteId) => {
+    setNotes(notes.filter((note) => note.id !== noteId))
+  }
 
   return (
     <div className='NoteApp'>
@@ -35,8 +56,12 @@ const NoteApp = () => {
             onChange={(e) => setNewNote({ ...newNote, content: e.target.value })}
             placeholder='Note Content...'
           ></textarea>
+          {editMode ? (
+            <button type ='submit'>Save Edit</button>
+          ):(
           <button type='submit'>Add Note</button>
-        </form>
+          )}
+          </form>
       </div>
 
       <div className='NoteWrapper'>
@@ -45,6 +70,12 @@ const NoteApp = () => {
             <li key={note.id}>
               <h3>{note.title}</h3>
               <p>{note.content}</p>
+              {editMode && editNoteId === note.id ? (
+                <button onClick={() => handleEditNoteCancel()}> Cancel Edit</button>
+              ):(
+                <button onClick={() => handleEditNote(note)}>Edit</button>
+              )}
+              <button onClick={() => handleDeleteNote(note.id)}>Delete</button>
             </li>
           ))}
         </ul>
