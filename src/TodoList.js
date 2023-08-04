@@ -21,8 +21,8 @@ const NoteApp = () => {
 
   return (
     <div className='NoteApp'>
-      <div className='Submit'>
         <h1>NOTE APP</h1>
+        <div className='Submit' >
         <form onSubmit={handleAddNote}>
           <input
             type='text'
